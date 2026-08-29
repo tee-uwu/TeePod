@@ -19,7 +19,8 @@ const corsOrigin =
 app.use(cors({ origin: corsOrigin }));
 app.use(express.json());
 
-app.get("/api/health", (_req, res) => {
+// Support both /api/health and /health (in case Vercel rewrites strip /api)
+app.get(["/api/health", "/health"], (_req, res) => {
   const apiKey = process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY;
   res.json({
     ok: true,
@@ -27,7 +28,8 @@ app.get("/api/health", (_req, res) => {
   });
 });
 
-app.use("/api/youtube", youtubeRouter);
+// Support both /api/youtube and /youtube
+app.use(["/api/youtube", "/youtube"], youtubeRouter);
 
 app.use((_req, res) => {
   res.status(404).json({ error: "Not found." });
