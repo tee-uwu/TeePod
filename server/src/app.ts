@@ -20,11 +20,10 @@ app.use(cors({ origin: corsOrigin }));
 app.use(express.json());
 
 app.get("/api/health", (_req, res) => {
+  const apiKey = process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY;
   res.json({
     ok: true,
-    hasApiKey: Boolean(
-      process.env.YOUTUBE_API_KEY && process.env.YOUTUBE_API_KEY !== "your_api_key_here"
-    ),
+    hasApiKey: Boolean(apiKey && apiKey !== "your_api_key_here"),
   });
 });
 

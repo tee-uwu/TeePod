@@ -34,10 +34,10 @@ export class YouTubeApiError extends Error {
 }
 
 function getApiKey(): string {
-  const key = process.env.YOUTUBE_API_KEY;
+  const key = process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY;
   if (!key || key === "your_api_key_here") {
     throw new YouTubeApiError(
-      "The server is missing a valid YOUTUBE_API_KEY. Add one to server/.env.",
+      "The server is missing a valid YOUTUBE_API_KEY. Add one to server/.env or Vercel environment variables.",
       500,
       "MISSING_API_KEY"
     );
