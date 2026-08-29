@@ -5,6 +5,7 @@
   "description": "TeePod — a customizable, retro-iPod-inspired web music player powered by YouTube.",
   "scripts": {
     "install:all": "npm install --prefix server && npm install --prefix client",
+    "postinstall": "npm run install:all",
     "dev": "concurrently -n SERVER,CLIENT -c green,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
