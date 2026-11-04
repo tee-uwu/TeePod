@@ -12,7 +12,7 @@ export default function AboutModal() {
         <img
           src="/teepod.png"
           alt="TeePod Logo"
-          className="h-24 w-24 object-contain rounded-2xl drop-shadow-md"
+          className="h-32 w-32 object-contain rounded-2xl drop-shadow-lg"
         />
         <p>
           TeePod is a customizable, click-wheel music player that searches YouTube for songs
