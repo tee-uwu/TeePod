@@ -11,6 +11,7 @@ import {
   Shuffle,
   Volume2,
 } from "lucide-react";
+import { useAlbumPalette } from "../hooks/useAlbumPalette";
 import { useStore } from "../store/useStore";
 import CoverFlow from "./CoverFlow";
 
@@ -39,6 +40,12 @@ export default function IPodScreen() {
   const openModal = useStore((s) => s.openModal);
 
   const currentSong = playlist.find((s) => s.id === currentSongId);
+  const activeSong =
+    playlist[highlightedIndex] ??
+    playlist.find((s) => s.id === currentSongId) ??
+    playlist[0] ??
+    null;
+  const palette = useAlbumPalette(activeSong);
   const progress = duration > 0 ? Math.min(100, (currentTime / duration) * 100) : 0;
 
   // Determine active view mode
@@ -56,6 +63,16 @@ export default function IPodScreen() {
     >
       {screenWallpaper && (
         <div className="pointer-events-none absolute inset-0 bg-black/45 backdrop-blur-[0.5px]" />
+      )}
+
+      {/* Subtle ambient backlight glow matching the active album art color */}
+      {!screenWallpaper && (
+        <div
+          className="pointer-events-none absolute inset-0 transition-opacity duration-700 opacity-20"
+          style={{
+            background: `radial-gradient(ellipse 85% 65% at 50% 35%, ${palette.dominantHex}, transparent 70%)`,
+          }}
+        />
       )}
 
       {/* subtle glass reflection */}
@@ -133,6 +150,7 @@ export default function IPodScreen() {
                   onSelect={(idx) => setHighlightedIndex(idx)}
                   currentSongId={currentSongId}
                   isPlaying={isPlaying}
+                  activeColor={palette.glowColor}
                 />
               </motion.div>
             ) : activeMode === "nowplaying" && currentSong ? (

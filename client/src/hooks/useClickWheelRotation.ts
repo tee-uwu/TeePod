@@ -168,6 +168,25 @@ export function useClickWheelRotation({ onStep, onButtonTap, disabled }: Options
     [calculateAngleAndRadius, onButtonTap]
   );
 
+  const onWheel = useCallback(
+    (e: React.WheelEvent) => {
+      if (disabled) return;
+      const delta = e.deltaY || e.deltaX;
+      if (Math.abs(delta) < 3) return;
+      accumulatedRef.current += delta;
+      if (accumulatedRef.current >= DEGREES_PER_STEP * 1.5) {
+        triggerStepFeedback();
+        onStep(1);
+        accumulatedRef.current = 0;
+      } else if (accumulatedRef.current <= -DEGREES_PER_STEP * 1.5) {
+        triggerStepFeedback();
+        onStep(-1);
+        accumulatedRef.current = 0;
+      }
+    },
+    [disabled, onStep, triggerStepFeedback]
+  );
+
   return {
     ref,
     handlers: {
@@ -176,6 +195,7 @@ export function useClickWheelRotation({ onStep, onButtonTap, disabled }: Options
       onPointerUp: endGesture,
       onPointerCancel: endGesture,
       onPointerLeave: endGesture,
+      onWheel,
     },
   };
 }

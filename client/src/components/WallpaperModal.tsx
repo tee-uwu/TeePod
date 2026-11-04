@@ -1,4 +1,4 @@
-import { Check, Image as ImageIcon, Trash2, Upload } from "lucide-react";
+import { Check, Image as ImageIcon, Sparkles, Trash2, Upload } from "lucide-react";
 import React, { useRef, useState } from "react";
 import { useStore } from "../store/useStore";
 import ModalSheet from "./ModalSheet";
@@ -176,15 +176,23 @@ export default function WallpaperModal() {
           </div>
         </div>
 
-        {/* Clear Wallpaper Button */}
-        {activeValue && (
+        {/* Reset / Status for Wallpaper */}
+        {activeValue ? (
           <button
             type="button"
             onClick={() => setActiveValue(null)}
-            className="flex items-center justify-center gap-1.5 rounded-full border border-red-200 py-2 text-xs font-display font-medium text-red-500 transition hover:bg-red-50"
+            className="flex items-center justify-center gap-1.5 rounded-full border border-ink/20 py-2 text-xs font-display font-medium text-ink transition hover:bg-black/5"
           >
-            <Trash2 size={14} /> Remove {target === "page" ? "Page" : "Screen"} Wallpaper
+            <Sparkles size={14} className="text-amber-500" /> Reset to Dynamic Album Color
+            (Default)
           </button>
+        ) : (
+          <div className="flex items-center justify-center gap-1.5 rounded-2xl bg-black/5 py-2.5 px-3 text-center text-xs font-display text-ink/70">
+            <Sparkles size={13} className="text-amber-500" />
+            <span>
+              Dynamic album color active — fades to the currently selected music's artwork.
+            </span>
+          </div>
         )}
       </div>
     </ModalSheet>

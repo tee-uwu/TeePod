@@ -11,6 +11,7 @@ import SettingsModal from "./components/SettingsModal";
 import StickerPicker from "./components/StickerPicker";
 import WallpaperModal from "./components/WallpaperModal";
 import YouTubePlayer from "./components/YouTubePlayer";
+import { useAlbumPalette } from "./hooks/useAlbumPalette";
 import { useKeyboardControls } from "./hooks/useKeyboardControls";
 import { checkApiHealth } from "./services/youtube";
 import { useStore } from "./store/useStore";
@@ -21,6 +22,18 @@ export default function App() {
   const theme = useStore((s) => s.settings.theme);
   const wallpaper = useStore((s) => s.wallpaper);
   const setErrorMessage = useStore((s) => s.setErrorMessage);
+  const playlist = useStore((s) => s.playlist);
+  const highlightedIndex = useStore((s) => s.highlightedIndex);
+  const currentSongId = useStore((s) => s.currentSongId);
+
+  // Active song when scrolling through music or playing
+  const activeSong =
+    playlist[highlightedIndex] ??
+    playlist.find((s) => s.id === currentSongId) ??
+    playlist[0] ??
+    null;
+
+  const palette = useAlbumPalette(activeSong, playlist);
 
   useEffect(() => {
     checkApiHealth().then((health) => {
@@ -34,13 +47,34 @@ export default function App() {
 
   return (
     <div
-      className={`min-h-[100dvh] w-full transition-all duration-500 bg-cover bg-center bg-no-repeat ${
-        theme === "dark" ? "bg-[#1c1712] text-cream" : "bg-[#f2e9da] text-ink"
+      className={`min-h-[100dvh] w-full transition-[background-color,background-image,color] duration-700 ease-out bg-cover bg-center bg-no-repeat relative overflow-x-hidden ${
+        theme === "dark" ? "text-cream" : "text-ink"
       }`}
-      style={wallpaper ? { backgroundImage: `url(${wallpaper})` } : undefined}
+      style={
+        wallpaper
+          ? { backgroundImage: `url(${wallpaper})` }
+          : {
+              backgroundColor: theme === "dark" ? palette.fadedDark : palette.fadedLight,
+              backgroundImage:
+                theme === "dark"
+                  ? palette.fadedGradientDark
+                  : palette.fadedGradientLight,
+            }
+      }
     >
+      {/* User custom wallpaper dim overlay */}
       {wallpaper && (
         <div className="fixed inset-0 bg-black/20 pointer-events-none backdrop-blur-[1px]" />
+      )}
+
+      {/* Dynamic ambient color glow from the active album */}
+      {!wallpaper && (
+        <div
+          className="pointer-events-none fixed inset-0 transition-opacity duration-700"
+          style={{
+            background: `radial-gradient(circle at 50% 42%, ${palette.glowColor} 0%, transparent 68%)`,
+          }}
+        />
       )}
 
       <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-2xl flex-col items-center justify-center px-4 py-8 sm:py-12">

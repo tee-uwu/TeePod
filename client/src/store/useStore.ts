@@ -126,9 +126,14 @@ export const useStore = create<AppState>()(
         set((state) => {
           const exists = state.playlist.some((s) => s.youtubeVideoId === song.youtubeVideoId);
           const playlist = exists ? state.playlist : [...state.playlist, song];
+          const songIndex = playlist.findIndex(
+            (s) => s.id === song.id || s.youtubeVideoId === song.youtubeVideoId
+          );
           return {
             playlist,
             currentSongId: playImmediately ? song.id : state.currentSongId ?? song.id,
+            highlightedIndex:
+              playImmediately && songIndex >= 0 ? songIndex : state.highlightedIndex,
             isPlaying: playImmediately ? true : state.isPlaying,
           };
         });
@@ -171,7 +176,15 @@ export const useStore = create<AppState>()(
           return { screenViewMode: modes[(current + 1) % modes.length] };
         }),
 
-      playSong: (id) => set({ currentSongId: id, isPlaying: true, playerStatus: "loading" }),
+      playSong: (id) => {
+        const idx = get().playlist.findIndex((s) => s.id === id);
+        set({
+          currentSongId: id,
+          isPlaying: true,
+          playerStatus: "loading",
+          ...(idx >= 0 ? { highlightedIndex: idx } : {}),
+        });
+      },
 
       togglePlay: () => {
         const { playlist, currentSongId } = get();
@@ -205,8 +218,10 @@ export const useStore = create<AppState>()(
           const pool = remaining.length > 0 ? remaining : playlist;
           const pick = pool[Math.floor(Math.random() * pool.length)];
           const newHistory = remaining.length > 0 ? [...shuffleHistory, pick.id] : [pick.id];
+          const pickIndex = playlist.findIndex((s) => s.id === pick.id);
           set({
             currentSongId: pick.id,
+            highlightedIndex: pickIndex >= 0 ? pickIndex : 0,
             isPlaying: true,
             playerStatus: "loading",
             shuffleHistory: newHistory,
@@ -217,7 +232,12 @@ export const useStore = create<AppState>()(
         const isLast = currentIndex === playlist.length - 1 || currentIndex === -1;
         if (isLast) {
           if (repeatMode === "all") {
-            set({ currentSongId: playlist[0].id, isPlaying: true, playerStatus: "loading" });
+            set({
+              currentSongId: playlist[0].id,
+              highlightedIndex: 0,
+              isPlaying: true,
+              playerStatus: "loading",
+            });
           } else {
             set({ isPlaying: false, playerStatus: "idle" });
           }
@@ -225,6 +245,7 @@ export const useStore = create<AppState>()(
         }
         set({
           currentSongId: playlist[currentIndex + 1].id,
+          highlightedIndex: currentIndex + 1,
           isPlaying: true,
           playerStatus: "loading",
         });
@@ -244,6 +265,7 @@ export const useStore = create<AppState>()(
         const prevIndex = currentIndex <= 0 ? playlist.length - 1 : currentIndex - 1;
         set({
           currentSongId: playlist[prevIndex].id,
+          highlightedIndex: prevIndex,
           isPlaying: true,
           playerStatus: "loading",
         });

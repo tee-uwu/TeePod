@@ -9,6 +9,7 @@ interface CoverFlowProps {
   onSelect: (index: number) => void;
   currentSongId: string | null;
   isPlaying: boolean;
+  activeColor?: string;
 }
 
 export default function CoverFlow({
@@ -17,6 +18,7 @@ export default function CoverFlow({
   onSelect,
   currentSongId,
   isPlaying,
+  activeColor,
 }: CoverFlowProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const dragStartX = useRef<number | null>(null);
@@ -93,7 +95,9 @@ export default function CoverFlow({
                 style={{
                   transformStyle: "preserve-3d",
                   boxShadow: isSelected
-                    ? "0 12px 28px -4px rgba(0, 0, 0, 0.75), 0 0 0 1.5px rgba(255, 255, 255, 0.25)"
+                    ? `0 12px 28px -4px rgba(0, 0, 0, 0.75), 0 0 24px -2px ${
+                        activeColor || "rgba(255, 255, 255, 0.2)"
+                      }, 0 0 0 1.5px rgba(255, 255, 255, 0.25)`
                     : "0 6px 16px -2px rgba(0, 0, 0, 0.5)",
                 }}
               >
