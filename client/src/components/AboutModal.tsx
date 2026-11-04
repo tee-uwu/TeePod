@@ -10,7 +10,7 @@ export default function AboutModal() {
     <ModalSheet open={activeModal === "about"} title="About TeePod" onClose={closeModal}>
       <div className="flex flex-col items-center gap-4 text-sm text-ink/80 text-center">
         <img
-          src="/teepod-logo.png"
+          src="/teepod.png"
           alt="TeePod Logo"
           className="h-24 w-24 object-contain rounded-2xl drop-shadow-md"
         />

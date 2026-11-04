@@ -5,8 +5,8 @@
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#FAF4C9",
-  "theme_color": "#FAF4C9",
+  "background_color": "#054CAC",
+  "theme_color": "#054CAC",
   "icons": [
     {
       "src": "/icon-192.png",
@@ -25,6 +25,12 @@
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/teepod.png",
+      "sizes": "2000x2000",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/teepod-logo.png",

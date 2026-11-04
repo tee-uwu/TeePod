@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./client/public/teepod-logo.png" alt="TeePod Logo" width="180" height="180" />
+  <img src="./client/public/teepod.png" alt="TeePod Logo" width="180" height="180" />
 </p>
 
 <h1 align="center">TeePod</h1>
