@@ -3,7 +3,7 @@ import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { useState } from "react";
 import { useClickWheelRotation, type WheelQuadrant } from "../hooks/useClickWheelRotation";
 import { useStore } from "../store/useStore";
-import { darken, lighten } from "../utils/color";
+import { contrastText, darken, lighten } from "../utils/color";
 import {
   playButtonSound,
   triggerHapticButton,
@@ -75,6 +75,7 @@ export default function ClickWheel() {
 
   const wheelLight = lighten(wheelColor, 0.5);
   const wheelDark = darken(wheelColor, 0.12);
+  const buttonColor = contrastText(wheelColor);
 
   return (
     <div className="relative mx-auto mt-6 aspect-square w-[78%] max-w-[19rem] select-none">
@@ -92,6 +93,7 @@ export default function ClickWheel() {
         style={{
           background: `radial-gradient(circle at 32% 28%, ${wheelLight}, ${wheelColor} 55%, ${wheelDark} 100%)`,
           touchAction: "none",
+          color: buttonColor,
         }}
       >
         {/* Step Ripple Animation */}
@@ -110,33 +112,69 @@ export default function ClickWheel() {
 
         {/* Button Labels & Icons (pointer-events-none so touch down on top/MENU passes to wheel) */}
         <div
-          className={`pointer-events-none absolute left-1/2 top-[9%] -translate-x-1/2 text-[11px] font-display font-semibold tracking-wide text-[var(--ipod-body-dark)]/70 transition-transform ${
-            activeButton === "menu" ? "scale-90 opacity-100 text-black" : "scale-100"
+          className={`pointer-events-none absolute left-1/2 top-[9%] -translate-x-1/2 text-[11px] font-display font-semibold tracking-wide transition-transform ${
+            activeButton === "menu" ? "scale-90" : "scale-100"
           }`}
+          style={{
+            color:
+              activeButton === "menu"
+                ? buttonColor === "#2B2320"
+                  ? "#000000"
+                  : "#ffffff"
+                : buttonColor,
+            opacity: activeButton === "menu" ? 1 : 0.75,
+          }}
         >
           MENU
         </div>
 
         <div
-          className={`pointer-events-none absolute left-[9%] top-1/2 -translate-y-1/2 text-[var(--ipod-body-dark)]/70 transition-transform ${
-            activeButton === "previous" ? "scale-90 opacity-100 text-black" : "scale-100"
+          className={`pointer-events-none absolute left-[9%] top-1/2 -translate-y-1/2 transition-transform ${
+            activeButton === "previous" ? "scale-90" : "scale-100"
           }`}
+          style={{
+            color:
+              activeButton === "previous"
+                ? buttonColor === "#2B2320"
+                  ? "#000000"
+                  : "#ffffff"
+                : buttonColor,
+            opacity: activeButton === "previous" ? 1 : 0.75,
+          }}
         >
           <SkipBack size={20} strokeWidth={2.25} />
         </div>
 
         <div
-          className={`pointer-events-none absolute right-[9%] top-1/2 -translate-y-1/2 text-[var(--ipod-body-dark)]/70 transition-transform ${
-            activeButton === "next" ? "scale-90 opacity-100 text-black" : "scale-100"
+          className={`pointer-events-none absolute right-[9%] top-1/2 -translate-y-1/2 transition-transform ${
+            activeButton === "next" ? "scale-90" : "scale-100"
           }`}
+          style={{
+            color:
+              activeButton === "next"
+                ? buttonColor === "#2B2320"
+                  ? "#000000"
+                  : "#ffffff"
+                : buttonColor,
+            opacity: activeButton === "next" ? 1 : 0.75,
+          }}
         >
           <SkipForward size={20} strokeWidth={2.25} />
         </div>
 
         <div
-          className={`pointer-events-none absolute left-1/2 bottom-[9%] -translate-x-1/2 text-[var(--ipod-body-dark)]/70 transition-transform ${
-            activeButton === "play" ? "scale-90 opacity-100 text-black" : "scale-100"
+          className={`pointer-events-none absolute left-1/2 bottom-[9%] -translate-x-1/2 transition-transform ${
+            activeButton === "play" ? "scale-90" : "scale-100"
           }`}
+          style={{
+            color:
+              activeButton === "play"
+                ? buttonColor === "#2B2320"
+                  ? "#000000"
+                  : "#ffffff"
+                : buttonColor,
+            opacity: activeButton === "play" ? 1 : 0.75,
+          }}
         >
           {isPlaying ? (
             <Pause size={19} strokeWidth={2.25} />
